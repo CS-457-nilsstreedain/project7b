@@ -184,27 +184,6 @@ float	Xrot, Yrot;				// rotation angles in degrees
 
 int		ObjectList;
 
-//float Eta = 1.4f;
-//float Mix = 0.5f;
-//float NoiseAmp = 0.3f;
-//float NoiseFreq = 1.0f;
-float Sc = 0.5f;
-float Tc = 0.5f;
-float Rad = 0.3f;
-float Mag = 2.0f;
-float Whirl = 15.0f;
-float Mosaic = 0.01f;
-
-GLuint CubeName;
-char * FaceFiles[6] = {
-    "nvposx.bmp",
-    "nvnegx.bmp",
-    "nvnegy.bmp",
-    "nvposy.bmp",
-    "nvposz.bmp",
-    "nvnegz.bmp"
-};
-
 // function prototypes:
 
 void	Animate( );
@@ -284,9 +263,9 @@ MulArray3(float factor, float a, float b, float c )
 //#include "osusphere.cpp"
 //#include "osucone.cpp"
 //#include "osutorus.cpp"
-#include "bmptotexture.cpp"
+//#include "bmptotexture.cpp"
 #include "loadobjfile.cpp"
-#include "keytime.cpp"
+//#include "keytime.cpp"
 #include "glslprogram.cpp"
 
 float NowS0, NowT0, NowD;
@@ -759,13 +738,6 @@ InitGraphics( )
 	// set the uniform variables that will not change:
 	
 	Pattern.Use( );
-    Pattern.SetUniformVariable("uSc", 0.5f);
-    Pattern.SetUniformVariable("uTc", 0.5f);
-    Pattern.SetUniformVariable("uRad", 0.3f);
-    Pattern.SetUniformVariable("uMag", 2.0f);
-    Pattern.SetUniformVariable("uWhirl", 15.0f);
-    Pattern.SetUniformVariable("uMosaic", 0.01f);
-    Pattern.SetUniformVariable("uImageUnit", 5);
 	Pattern.UnUse( );
 }
 
@@ -812,46 +784,6 @@ Keyboard( unsigned char c, int x, int y )
 
 	switch( c )
 	{
-        case 's':
-            Sc -= 0.05f;
-            break;
-        case 'S':
-            Sc += 0.05f;
-            break;
-        case 't':
-            Tc -= 0.05f;
-            break;
-        case 'T':
-            Tc += 0.05f;
-            break;
-        case 'r':
-            Rad -= 0.05f;
-            if(Rad < 0.01f) Rad = 0.01f;
-            break;
-        case 'R':
-            Rad += 0.05f;
-            break;
-        case 'v':  // v for zoom out (reduce magnification)
-            Mag -= 0.1f;
-            if(Mag < 0.1f) Mag = 0.1f;
-            break;
-        case 'V':  // V for zoom in (increase magnification)
-            Mag += 0.1f;
-            break;
-        case 'w':
-            Whirl -= 1.0f;
-            break;
-        case 'W':
-            Whirl += 1.0f;
-            break;
-        case 'o':
-            Mosaic -= 0.001f;
-            if(Mosaic < 0.0001f) Mosaic = 0.0001f;
-            break;
-        case 'O':
-            Mosaic += 0.001f;
-            break;
-
 		case 'q':
 		case 'Q':
 		case ESCAPE:
