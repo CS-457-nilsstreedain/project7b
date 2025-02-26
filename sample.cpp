@@ -435,12 +435,29 @@ Display( )
 	// draw the box object by calling up its display list:
 
 	Pattern.Use( );
-    Pattern.SetUniformVariable("uSc", Sc);
-    Pattern.SetUniformVariable("uTc", Tc);
-    Pattern.SetUniformVariable("uRad", Rad);
-    Pattern.SetUniformVariable("uMag", Mag);
-    Pattern.SetUniformVariable("uWhirl", Whirl);
-    Pattern.SetUniformVariable("uMosaic", Mosaic);
+    // Set the tiling parameters in world–space units:
+    Pattern.SetUniformVariable("uPeriod", 0.2f);    // Adjust for desired spacing between scale centers
+    Pattern.SetUniformVariable("uScale", 0.05f);      // Set the hexagon inradius (scale size)
+    Pattern.SetUniformVariable("uBumpHeight", 0.05f); // How high the scale is raised
+    Pattern.SetUniformVariable("uGapDepth", -0.005f); // How deep the gap is recessed
+
+    // Set lighting uniforms (use float arrays for vec3 data):
+    float lightDir[3]     = { 0.5f, 0.5f, 1.0f };   // Example fixed world–space light direction
+    float lightColor[3]   = { 1.0f, 1.0f, 1.0f };     // White diffuse light
+    float ambientColor[3] = { 0.2f, 0.2f, 0.2f };       // Low ambient light
+
+    Pattern.SetUniformVariable("uLightDir", lightDir);
+    Pattern.SetUniformVariable("uLightColor", lightColor);
+    Pattern.SetUniformVariable("uAmbientColor", ambientColor);
+
+    // Set the colors for scales and gaps:
+    float scaleColor[3] = { 1.0f, 0.8f, 0.6f };  // For example, a light brown for scales
+    float gapColor[3]   = { 0.3f, 0.2f, 0.1f };  // A darker color for the gaps
+
+    Pattern.SetUniformVariable("uScaleColor", scaleColor);
+    Pattern.SetUniformVariable("uGapColor", gapColor);
+
+
 	glCallList( ObjectList );
 	Pattern.UnUse( );
 
@@ -758,22 +775,6 @@ InitGraphics( )
     Pattern.SetUniformVariable("uMosaic", 0.01f);
     Pattern.SetUniformVariable("uImageUnit", 5);
 	Pattern.UnUse( );
-
-    GLuint imageTexture;
-    int imgWidth, imgHeight;
-    glGenTextures(1, &imageTexture);
-    glActiveTexture(GL_TEXTURE0 + 5);
-    glBindTexture(GL_TEXTURE_2D, imageTexture);
-    unsigned char * imageData = BmpToTexture("image.bmp", &imgWidth, &imgHeight);
-    if(imageData == NULL)
-        fprintf(stderr, "Could not load image.bmp\n");
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE, imageData);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    delete [] imageData;
 }
 
 
@@ -794,12 +795,7 @@ InitLists( )
 
 	ObjectList = glGenLists( 1 );
 	glNewList( ObjectList, GL_COMPILE );
-        glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, 0.0f);
-            glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, 0.0f);
-            glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, 0.0f);
-            glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, 0.0f);
-        glEnd();
+        LoadObjFile( "snakeH.obj" );
 	glEndList( );
 
 

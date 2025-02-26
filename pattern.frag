@@ -1,38 +1,24 @@
-uniform sampler2D uImageUnit;
+// This fragment shader uses two distinct colors to clearly differentiate scales and gaps.
+// It also applies basic diffuse and ambient lighting.
 
-uniform float uSc;
-uniform float uTc;
-uniform float uRad;
-uniform float uMag;
-uniform float uWhirl;
-uniform float uMosaic;
+varying vec3 vNormal;
+varying float vMask;  // 1.0 for scale, 0.0 for gap
 
-varying vec2 vST;
+uniform vec3 uLightDir;      // World–space light direction (normalized)
+uniform vec3 uLightColor;    // Diffuse light intensity/color
+uniform vec3 uAmbientColor;  // Ambient light contribution
 
-void
-main( )
+uniform vec3 uScaleColor;    // Color for scales (e.g., light brown)
+uniform vec3 uGapColor;      // Color for gaps (e.g., darker)
+
+void main( )
 {
-    // Change (s,t) so that (0,0) is at the Magic Lens center:
-    vec2 st = vST - vec2(uSc, uTc);
-    float r = length(st);
+    // Compute basic diffuse lighting.
+    float diffuse = max(dot(normalize(vNormal), normalize(uLightDir)), 0.0);
+    vec3 lighting = uAmbientColor + uLightColor * diffuse;
     
-    // If outside the Magic Lens, sample normally.
-    if (r > uRad) {
-        vec3 rgb = texture2D(uImageUnit, vST).rgb;
-        gl_FragColor = vec4(rgb, 1.0);
-    }
-    else {
-        float rPrime = r / uMag;
-        float theta = atan(st.t, st.s);
-        float thetaPrime = theta - uWhirl * rPrime;
-        
-        st = rPrime * vec2(cos(thetaPrime), sin(thetaPrime));
-        st += vec2(uSc, uTc);
-        
-        // Mosaic effect: snap stNew to the center of a grid block.
-        st = floor(st / uMosaic) * uMosaic + 0.5 * uMosaic;
-        
-        vec3 rgb = texture2D(uImageUnit, st).rgb;
-        gl_FragColor = vec4(rgb, 1.0);
-    }
+    // Choose base color based on the mask.
+    vec3 baseColor = (vMask > 0.5) ? uScaleColor : uGapColor;
+    
+    gl_FragColor = vec4(baseColor * lighting, 1.0);
 }
