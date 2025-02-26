@@ -435,29 +435,21 @@ Display( )
 	// draw the box object by calling up its display list:
 
 	Pattern.Use( );
-    // Set the tiling parameters in world–space units:
-    Pattern.SetUniformVariable("uPeriod", 0.2f);    // Adjust for desired spacing between scale centers
-    Pattern.SetUniformVariable("uScale", 0.05f);      // Set the hexagon inradius (scale size)
-    Pattern.SetUniformVariable("uBumpHeight", 0.05f); // How high the scale is raised
-    Pattern.SetUniformVariable("uGapDepth", -0.005f); // How deep the gap is recessed
-
-    // Set lighting uniforms (use float arrays for vec3 data):
-    float lightDir[3]     = { 0.5f, 0.5f, 1.0f };   // Example fixed world–space light direction
-    float lightColor[3]   = { 1.0f, 1.0f, 1.0f };     // White diffuse light
-    float ambientColor[3] = { 0.2f, 0.2f, 0.2f };       // Low ambient light
-
-    Pattern.SetUniformVariable("uLightDir", lightDir);
-    Pattern.SetUniformVariable("uLightColor", lightColor);
-    Pattern.SetUniformVariable("uAmbientColor", ambientColor);
-
-    // Set the colors for scales and gaps:
-    float scaleColor[3] = { 1.0f, 0.8f, 0.6f };  // For example, a light brown for scales
-    float gapColor[3]   = { 0.3f, 0.2f, 0.1f };  // A darker color for the gaps
-
-    Pattern.SetUniformVariable("uScaleColor", scaleColor);
-    Pattern.SetUniformVariable("uGapColor", gapColor);
-
-
+        float lightDir[3]     = { 0.5f, 0.5f, 1.0f };
+        float lightColor[3]   = { 1.0f, 1.0f, 1.0f };
+        float ambientColor[3] = { 0.2f, 0.2f, 0.2f };
+        float scaleColor[3] = { 1.0f, 0.8f, 0.6f };
+        float gapColor[3]   = { 0.3f, 0.2f, 0.1f };
+        
+        Pattern.SetUniformVariable("uPeriod", 0.2f);
+        Pattern.SetUniformVariable("uScale", 0.05f);
+        Pattern.SetUniformVariable("uBumpHeight", 0.05f);
+        Pattern.SetUniformVariable("uGapDepth", -0.005f);
+        Pattern.SetUniformVariable("uLightDir", lightDir);
+        Pattern.SetUniformVariable("uLightColor", lightColor);
+        Pattern.SetUniformVariable("uAmbientColor", ambientColor);
+        Pattern.SetUniformVariable("uScaleColor", scaleColor);
+        Pattern.SetUniformVariable("uGapColor", gapColor);
 	glCallList( ObjectList );
 	Pattern.UnUse( );
 
