@@ -412,24 +412,15 @@ Display( )
     glActiveTexture(GL_TEXTURE0);
 
 	// draw the box object by calling up its display list:
+    float twist = (Time - 0.5f) * 3.14159f / 4.0f;
 
 	Pattern.Use( );
-        float lightDir[3]     = { 0.5f, 0.5f, 1.0f };
-        float lightColor[3]   = { 1.0f, 1.0f, 1.0f };
-        float ambientColor[3] = { 0.2f, 0.2f, 0.2f };
-        float scaleColor[3] = { 1.0f, 0.8f, 0.6f };
-        float gapColor[3]   = { 0.3f, 0.2f, 0.1f };
-        
-        Pattern.SetUniformVariable("uPeriod", 0.2f);
-        Pattern.SetUniformVariable("uScale", 0.05f);
-        Pattern.SetUniformVariable("uBumpHeight", 0.05f);
-        Pattern.SetUniformVariable("uGapDepth", -0.005f);
-        Pattern.SetUniformVariable("uLightDir", lightDir);
-        Pattern.SetUniformVariable("uLightColor", lightColor);
-        Pattern.SetUniformVariable("uAmbientColor", ambientColor);
-        Pattern.SetUniformVariable("uScaleColor", scaleColor);
-        Pattern.SetUniformVariable("uGapColor", gapColor);
-	glCallList( ObjectList );
+        Pattern.SetUniformVariable("uTwist", twist);
+        Pattern.SetUniformVariable("uKa", 0.2f);
+        Pattern.SetUniformVariable("uKd", 0.8f);
+        Pattern.SetUniformVariable("uKs", 0.3f);
+        Pattern.SetUniformVariable("uShininess", 16.0f);
+        glCallList( ObjectList );
 	Pattern.UnUse( );
 
 
@@ -759,7 +750,7 @@ InitLists( )
 
 	ObjectList = glGenLists( 1 );
 	glNewList( ObjectList, GL_COMPILE );
-        LoadObjFile( "snakeH.obj" );
+        LoadObjFile( "dino.obj" );
 	glEndList( );
 
 
